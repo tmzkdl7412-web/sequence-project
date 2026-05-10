@@ -336,7 +336,7 @@ st.markdown("")
 with tab_data:
     st.markdown('<div class="section-title">원본 시계열 시각화</div>',
                 unsafe_allow_html=True)
-    st.plotly_chart(plot_timeseries(df), use_container_width=True)
+    st.plotly_chart(plot_timeseries(df), use_container_width=True, key="ts_overview")
 
     col_l, col_r = st.columns(2)
     with col_l:
@@ -377,7 +377,7 @@ with tab_struct:
 
     try:
         stl_result = stl_decompose(df["value"], effective_season)
-        st.plotly_chart(plot_stl(stl_result, df.index), use_container_width=True)
+        st.plotly_chart(plot_stl(stl_result, df.index), use_container_width=True, key="stl_chart")
 
         # STL 해석
         trend_range = stl_result.trend.max() - stl_result.trend.min()
@@ -425,6 +425,7 @@ with tab_stat:
         st.plotly_chart(
             plot_differenced(df["value"], diffed_series, diff_d),
             use_container_width=True,
+            key="diff_chart",
         )
         st.markdown("""
         <div class="interp-box">
@@ -482,7 +483,7 @@ with tab_acf:
     </div>
     """, unsafe_allow_html=True)
 
-    st.plotly_chart(plot_acf_pacf(acf_v, pacf_v, conf), use_container_width=True)
+    st.plotly_chart(plot_acf_pacf(acf_v, pacf_v, conf), use_container_width=True, key="acf_pacf_chart")
 
     st.markdown('<div class="section-title">AR(p) / MA(q) 후보 추정</div>',
                 unsafe_allow_html=True)
@@ -519,7 +520,7 @@ with tab_trans:
         변환 목적: 분산 안정화(Log·Box-Cox), 값 범위 정규화(StandardScaler·MinMaxScaler)
         </div>
         """, unsafe_allow_html=True)
-        st.plotly_chart(plot_timeseries(df), use_container_width=True)
+        st.plotly_chart(plot_timeseries(df), use_container_width=True, key="ts_transform_raw")
         ts_transformed = ts
     else:
         ts_transformed = ts
@@ -547,6 +548,7 @@ with tab_trans:
                 st.plotly_chart(
                     plot_transform_comparison(ts, ts_transformed, tname),
                     use_container_width=True,
+                    key=f"transform_{tname}",
                 )
                 st.markdown(f'<div class="interp-ok">✅ {tname} 변환 적용 완료</div>',
                             unsafe_allow_html=True)
@@ -591,6 +593,7 @@ with tab_model:
                 st.plotly_chart(
                     plot_forecast_single(train, test, pred, mname),
                     use_container_width=True,
+                    key=f"forecast_single_{mname}",
                 )
 
     # 전체 오버레이
@@ -599,6 +602,7 @@ with tab_model:
     st.plotly_chart(
         plot_forecast_overlay(train, test, predictions),
         use_container_width=True,
+        key="forecast_overlay",
     )
 
     # 미래 예측 (최적 모델 기준)
@@ -614,6 +618,7 @@ with tab_model:
         st.plotly_chart(
             plot_future_forecast(ts, future_pred, future_model_name),
             use_container_width=True,
+            key="future_forecast",
         )
         st.markdown(f"""
         <div class="interp-ok">
@@ -661,6 +666,7 @@ with tab_eval:
     st.plotly_chart(
         plot_metrics_bars(metrics_df, best_name),
         use_container_width=True,
+        key="metrics_bars",
     )
 
 
@@ -686,6 +692,7 @@ with tab_resid:
         st.plotly_chart(
             plot_residuals(residuals, best_name, time_idx),
             use_container_width=True,
+            key="residuals_chart",
         )
 
         resid_mean = float(np.mean(residuals))
@@ -702,6 +709,7 @@ with tab_resid:
         st.plotly_chart(
             plot_residual_acf(r_acf, r_conf, best_name),
             use_container_width=True,
+            key="residual_acf_chart",
         )
         st.markdown("""
         <div class="interp-box">
@@ -758,6 +766,7 @@ with tab_bt:
                 st.plotly_chart(
                     plot_backtest(ts, hist_fc, bt_model_name),
                     use_container_width=True,
+                    key="backtest_chart",
                 )
 
                 bt_mae, bt_rmse = backtest_metrics(ts, hist_fc)
