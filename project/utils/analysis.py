@@ -57,27 +57,27 @@ def stationarity_summary(series: np.ndarray) -> tuple[dict, dict, str]:
     # 종합 해석
     if "정상" in adf["판정"] and "정상" in kp["판정"]:
         interpretation = (
-            f"ADF p-value = {adf['p-value']} (< 0.05) → 단위근 없음, "
-            f"KPSS p-value = {kp['p-value']} (> 0.05) → 추세 정상. "
-            f"**두 검정 모두 정상성을 지지합니다.** 차분 없이 모델링 가능합니다."
+            f"ADF p-value = {adf['p-value']} (&lt; 0.05) → 단위근 없음, "
+            f"KPSS p-value = {kp['p-value']} (&gt; 0.05) → 추세 정상. "
+            f"<b>두 검정 모두 정상성을 지지합니다.</b> 차분 없이 모델링 가능합니다."
         )
     elif "정상" in adf["판정"] and "비정상" in kp["판정"]:
         interpretation = (
             f"ADF p-value = {adf['p-value']} → 단위근 없음, "
             f"KPSS p-value = {kp['p-value']} → 추세 비정상. "
-            f"**결과가 상충합니다.** 추세 차분(d=1)을 고려하세요."
+            f"<b>결과가 상충합니다.</b> 추세 차분(d=1)을 고려하세요."
         )
     elif "비정상" in adf["판정"] and "정상" in kp["판정"]:
         interpretation = (
             f"ADF p-value = {adf['p-value']} → 단위근 존재, "
             f"KPSS p-value = {kp['p-value']} → 추세 정상. "
-            f"**결과가 상충합니다.** 차분(d=1)을 시도해 보세요."
+            f"<b>결과가 상충합니다.</b> 차분(d=1)을 시도해 보세요."
         )
     else:
         interpretation = (
             f"ADF p-value = {adf['p-value']} (≥ 0.05), "
-            f"KPSS p-value = {kp['p-value']} (< 0.05). "
-            f"**두 검정 모두 비정상으로 판단합니다.** 차분(d=1 또는 d=2)이 필요합니다."
+            f"KPSS p-value = {kp['p-value']} (&lt; 0.05). "
+            f"<b>두 검정 모두 비정상으로 판단합니다.</b> 차분(d=1 또는 d=2)이 필요합니다."
         )
     return adf, kp, interpretation
 
@@ -133,13 +133,13 @@ def suggest_arima_order(acf_vals: np.ndarray, pacf_vals: np.ndarray,
     # 해석 텍스트
     lines = []
     if p > 0:
-        lines.append(f"PACF가 lag {p}까지 유의 → **AR({p})** 성분 존재 가능")
+        lines.append(f"PACF가 lag {p}까지 유의 → <b>AR({p})</b> 성분 존재 가능")
     else:
         lines.append("PACF가 lag 1부터 유의하지 않음 → AR 성분 약함")
     if q > 0:
-        lines.append(f"ACF가 lag {q}까지 유의 → **MA({q})** 성분 존재 가능")
+        lines.append(f"ACF가 lag {q}까지 유의 → <b>MA({q})</b> 성분 존재 가능")
     else:
         lines.append("ACF가 lag 1부터 유의하지 않음 → MA 성분 약함")
-    lines.append(f"→ 추천 ARIMA 차수: **ARIMA(p={p}, d=사이드바, q={q})**")
+    lines.append(f"→ 추천 ARIMA 차수: <b>ARIMA(p={p}, d=상단 파라미터, q={q})</b>")
 
     return p, q, "\n\n".join(lines)

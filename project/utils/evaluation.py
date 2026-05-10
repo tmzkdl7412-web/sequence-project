@@ -88,17 +88,15 @@ def ljung_box_test(residuals: np.ndarray,
     last_p = lb["lb_pvalue"].iloc[-1]
     if last_p > 0.05:
         text = (
-            f"Ljung-Box 검정 p-value = {last_p:.4f} (> 0.05)\n\n"
-            f"→ 귀무가설(잔차에 자기상관 없음)을 **기각하지 못합니다**.\n\n"
-            f"잔차가 백색잡음에 가까우므로, 모델이 시계열의 구조를 "
-            f"적절히 포착했다고 판단할 수 있습니다."
+            f"Ljung-Box 검정 p-value = {last_p:.4f} (&gt; 0.05) "
+            f"→ 귀무가설(잔차에 자기상관 없음)을 <b>기각하지 못합니다</b>. "
+            f"잔차가 백색잡음에 가까우므로, 모델이 시계열의 구조를 적절히 포착했다고 판단할 수 있습니다."
         )
     else:
         text = (
-            f"Ljung-Box 검정 p-value = {last_p:.4f} (≤ 0.05)\n\n"
-            f"→ 귀무가설을 **기각**합니다. 잔차에 유의미한 자기상관이 "
-            f"남아 있습니다.\n\n모델 차수 조정(p, q 변경) 또는 "
-            f"계절 차분을 고려하세요."
+            f"Ljung-Box 검정 p-value = {last_p:.4f} (≤ 0.05) "
+            f"→ 귀무가설을 <b>기각</b>합니다. 잔차에 유의미한 자기상관이 남아 있습니다. "
+            f"모델 차수 조정(p, q 변경) 또는 계절 차분을 고려하세요."
         )
     return lb, text
 
